@@ -10,27 +10,15 @@ public class Grabbable : MonoBehaviour {
     private IState currentState = new Idle();
     private Rigidbody rigidbody;
     private Collider collider;
-    private Vector3 previousPosition;
-    private Vector3 interpolatedVelocity;
 
     public Rigidbody Rigidbody => rigidbody;
     public Collider Collider => collider;
 
-    public Vector3 InterpolatedVelocity => interpolatedVelocity.sqrMagnitude > Mathf.Pow(maxReleaseVelocity, 2)
-        ? interpolatedVelocity.normalized * maxReleaseVelocity 
-        : interpolatedVelocity;
-
     private void Awake() {
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
-        previousPosition = transform.position;
     }
 
-    private void FixedUpdate() {
-        if (currentState is not Grabbed) return;
-        interpolatedVelocity = (transform.position - previousPosition) / Time.fixedDeltaTime;
-        previousPosition = transform.position;
-    }
 
     public void Grab(Hand hand) {
         if (currentState is Grabbed) {
@@ -46,8 +34,6 @@ public class Grabbable : MonoBehaviour {
         rigidbody.interpolation = RigidbodyInterpolation.Extrapolate;
         rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         collider.excludeLayers |= 1 << LayerMask.NameToLayer("Player");
-        Debug.Log(LayerMask.GetMask("Player"));
-        previousPosition = transform.position;
     }
 
     public void Release() {
@@ -58,7 +44,11 @@ public class Grabbable : MonoBehaviour {
         currentState = new Idle();
         grabbed.RigidbodySnapshot.ApplyTo(rigidbody);
         grabbed.ColliderSnapshot.ApplyTo(collider);
-        rigidbody.linearVelocity = InterpolatedVelocity;
+    }
+    
+    public void ReleaseWithVelocity(Vector3 velocity) {
+        Release();
+        rigidbody.linearVelocity = velocity;
     }
 
     private interface IState {}

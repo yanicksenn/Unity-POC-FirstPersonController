@@ -221,37 +221,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &93775331
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 93775332}
-  m_Layer: 6
-  m_Name: Hand Idle Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &93775332
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 93775331}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 330585546}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &252325570
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,8 +464,6 @@ Transform:
   m_Children:
   - {fileID: 23396048}
   - {fileID: 2139204790}
-  - {fileID: 93775332}
-  - {fileID: 755602413}
   m_Father: {fileID: 2147475200}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &330585547
@@ -739,37 +706,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 448719166}
   m_CullTransparentMesh: 1
---- !u!1 &755602412
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 755602413}
-  m_Layer: 6
-  m_Name: Hand Swinging Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &755602413
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 755602412}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 330585546}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1418,9 +1354,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2139204790}
-  - component: {fileID: 2139204791}
   m_Layer: 6
-  m_Name: Hand
+  m_Name: Hand Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1441,24 +1376,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2139204791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2139204789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80dc51a8adad4480a98ad71d26694d09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  idleAnchor: {fileID: 93775332}
-  swingingAnchor: {fileID: 755602413}
-  maxGrabbingDistance: 3
-  maxSwingDistance: 200
-  autoReleaseVelocityThreshold: 8
-  looker: {fileID: 2147475206}
 --- !u!1 &2147475196
 GameObject:
   m_ObjectHideFlags: 0
@@ -1474,6 +1391,7 @@ GameObject:
   - component: {fileID: 2147475202}
   - component: {fileID: 2147475206}
   - component: {fileID: 2147475205}
+  - component: {fileID: 2147475207}
   - component: {fileID: 2147475203}
   m_Layer: 6
   m_Name: Player
@@ -1611,7 +1529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a47d9c79202eb4bac9ad4d295c45431a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: {fileID: 2139204791}
+  hand: {fileID: 0}
 --- !u!114 &2147475205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1641,6 +1559,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 330585545}
   lookSensitivity: 200
+--- !u!114 &2147475207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147475196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80dc51a8adad4480a98ad71d26694d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handAnchor: {fileID: 2139204790}
+  maxGrabbingDistance: 3
+  throwForce: 80
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
