@@ -4,9 +4,6 @@ using UnityEngine;
  RequireComponent(typeof(Rigidbody)),
  RequireComponent(typeof(Collider))]
 public class Grabbable : MonoBehaviour {
-    [SerializeField, Tooltip("The maximum speed at which the grabbable can be released in units per second.")] 
-    private float maxReleaseVelocity = 15f;
-    
     private IState _currentState = new Idle();
     private Rigidbody _rigidbody;
     private Collider _collider;
