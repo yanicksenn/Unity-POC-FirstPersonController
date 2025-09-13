@@ -1,5 +1,7 @@
 # POC First Person Controller
 
+![recording](https://raw.githubusercontent.com/yanicksenn/Unity-POC-FirstPersonController/2a5838c6fb8f481a593e2bc79c8bfd65d254981c/Img/recording.gif)
+
 A basic first person controller that can pick up and throw objects.
 
 ## Basic Idea
