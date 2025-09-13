@@ -11,11 +11,10 @@ public class Hand : MonoBehaviour {
         new(5f, 0.2f, 0.25f, new Vector3Pid.Unclamped());
 
     private IState _currentState = new Idle();
-    
-    private Looker looker;
+    private Looker _looker;
 
     private void Awake() {
-        looker = GetComponent<Looker>();
+        _looker = GetComponent<Looker>();
     }
 
     private void FixedUpdate() {
@@ -29,8 +28,8 @@ public class Hand : MonoBehaviour {
 
     public void Grab() {
         if (_currentState is Holding) return;
-        var origin = looker.LookOrigin;
-        var direction = looker.LookDirection;
+        var origin = _looker.LookOrigin;
+        var direction = _looker.LookDirection;
     
         if (!Physics.Raycast(origin, direction, out var hit, maxGrabbingDistance)) {
             return;
@@ -40,7 +39,7 @@ public class Hand : MonoBehaviour {
             return;
         }
     
-        _currentState = new Holding(grabbable, Quaternion.Inverse(looker.transform.rotation) * grabbable.transform.rotation);
+        _currentState = new Holding(grabbable, Quaternion.Inverse(_looker.transform.rotation) * grabbable.transform.rotation);
         grabbable.Grab(this);
     }
 
@@ -49,13 +48,13 @@ public class Hand : MonoBehaviour {
     }
 
     public void Throw() {
-        DropWithVelocity(throwForce * looker.LookDirection);
+        DropWithVelocity(throwForce * _looker.LookDirection);
     }
 
-    private void DropWithVelocity(Vector3 velocity) {
+    private void DropWithVelocity(Vector3 force) {
         if (_currentState is not Holding holding) return;
         _currentState = new Idle();
-        holding.Grabbable.ReleaseWithVelocity(velocity);
+        holding.Grabbable.ReleaseWithForce(force);
         _velocityPidController.Reset();
     }
 
@@ -66,7 +65,7 @@ public class Hand : MonoBehaviour {
     }
 
     private void RotateGrabbableInHand(Grabbable grabbable, Quaternion rotationOffset) {
-        grabbable.transform.rotation = looker.transform.rotation * rotationOffset;
+        grabbable.transform.rotation = _looker.transform.rotation * rotationOffset;
     }
     
     private interface IState {}

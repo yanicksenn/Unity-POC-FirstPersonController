@@ -1,8 +1,8 @@
+using System;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class Looker : MonoBehaviour
-{
+public class Looker : MonoBehaviour {
     [SerializeField]
     private Camera camera;
         
@@ -13,18 +13,28 @@ public class Looker : MonoBehaviour
     public Vector3 LookOrigin => GetLookOrigin();
     public Vector3 LookDirection => GetLookDirection();
 
-    private Vector2 lookRotation;
+    private Vector2 _lookRotation;
+
+    private void Awake() {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     private void Update() {
         var mouseX = LookInput.x * lookSensitivity * Time.deltaTime;
         var mouseY = LookInput.y * lookSensitivity * Time.deltaTime;
-        lookRotation = new Vector2(
-            Mathf.Clamp(lookRotation.x - mouseY, -60f, 60f),
-            lookRotation.y + mouseX
+        _lookRotation = new Vector2(
+            Mathf.Clamp(_lookRotation.x - mouseY, -60f, 60f),
+            _lookRotation.y + mouseX
         );
         camera.transform.localRotation = Quaternion.Euler(
-            lookRotation.x,
-            lookRotation.y,
+            _lookRotation.x,
+            0f,
+            0f
+        );
+        transform.localRotation = Quaternion.Euler(
+            0f,
+            _lookRotation.y,
             0f
         );
     }

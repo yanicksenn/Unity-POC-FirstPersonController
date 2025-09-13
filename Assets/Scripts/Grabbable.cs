@@ -7,48 +7,49 @@ public class Grabbable : MonoBehaviour {
     [SerializeField, Tooltip("The maximum speed at which the grabbable can be released in units per second.")] 
     private float maxReleaseVelocity = 15f;
     
-    private IState currentState = new Idle();
-    private Rigidbody rigidbody;
-    private Collider collider;
+    private IState _currentState = new Idle();
+    private Rigidbody _rigidbody;
+    private Collider _collider;
 
-    public Rigidbody Rigidbody => rigidbody;
-    public Collider Collider => collider;
+    public Rigidbody Rigidbody => _rigidbody;
+    public Collider Collider => _collider;
 
     private void Awake() {
-        rigidbody = GetComponent<Rigidbody>();
-        collider = GetComponent<Collider>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
     }
 
 
     public void Grab(Hand hand) {
-        if (currentState is Grabbed) {
+        if (_currentState is Grabbed) {
             return;
         }
 
-        currentState = new Grabbed(hand, 
-            RigidbodySnapshot.From(rigidbody),  
-            ColliderSnapshot.From(collider));
-        rigidbody.useGravity = false;
-        rigidbody.linearDamping = 10f;
-        rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        rigidbody.interpolation = RigidbodyInterpolation.Extrapolate;
-        rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        collider.excludeLayers |= 1 << LayerMask.NameToLayer("Player");
+        _currentState = new Grabbed(hand, 
+            RigidbodySnapshot.From(_rigidbody),  
+            ColliderSnapshot.From(_collider));
+        _rigidbody.useGravity = false;
+        _rigidbody.linearDamping = 10f;
+        _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        _rigidbody.interpolation = RigidbodyInterpolation.Extrapolate;
+        _rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        _collider.excludeLayers |= 1 << LayerMask.NameToLayer("Player");
     }
 
     public void Release() {
-        if (currentState is not Grabbed grabbed) {
+        if (_currentState is not Grabbed grabbed) {
             return;
         }
         
-        currentState = new Idle();
-        grabbed.RigidbodySnapshot.ApplyTo(rigidbody);
-        grabbed.ColliderSnapshot.ApplyTo(collider);
+        _currentState = new Idle();
+        grabbed.RigidbodySnapshot.ApplyTo(_rigidbody);
+        grabbed.ColliderSnapshot.ApplyTo(_collider);
     }
     
-    public void ReleaseWithVelocity(Vector3 velocity) {
+    public void ReleaseWithForce(Vector3 force) {
         Release();
-        rigidbody.linearVelocity = velocity;
+        _rigidbody.linearVelocity = Vector3.zero;
+        _rigidbody.AddForce(force);
     }
 
     private interface IState {}
@@ -66,43 +67,43 @@ public class Grabbable : MonoBehaviour {
     }
 
     private struct RigidbodySnapshot {
-        public bool useGravity;
-        public float linearDamping;
-        public RigidbodyConstraints constraints;
-        public RigidbodyInterpolation interpolation;
-        public CollisionDetectionMode collisionDetectionMode;
+        private bool _useGravity;
+        private float _linearDamping;
+        private RigidbodyConstraints _constraints;
+        private RigidbodyInterpolation _interpolation;
+        private CollisionDetectionMode _collisionDetectionMode;
 
         public static RigidbodySnapshot From(Rigidbody rigidbody) {
             return new RigidbodySnapshot() {
-                useGravity = rigidbody.useGravity,
-                linearDamping = rigidbody.linearDamping,
-                constraints = rigidbody.constraints
+                _useGravity = rigidbody.useGravity,
+                _linearDamping = rigidbody.linearDamping,
+                _constraints = rigidbody.constraints
             };
         }
 
         public void ApplyTo(Rigidbody rigidbody) {
-            rigidbody.useGravity = useGravity;
-            rigidbody.linearDamping = linearDamping;
-            rigidbody.constraints = constraints;
-            rigidbody.interpolation = interpolation;
-            rigidbody.collisionDetectionMode = collisionDetectionMode;
+            rigidbody.useGravity = _useGravity;
+            rigidbody.linearDamping = _linearDamping;
+            rigidbody.constraints = _constraints;
+            rigidbody.interpolation = _interpolation;
+            rigidbody.collisionDetectionMode = _collisionDetectionMode;
         }
     }
 
     private struct ColliderSnapshot {
-        public LayerMask includeLayers;
-        public LayerMask excludeLayers;
+        private LayerMask _includeLayers;
+        private LayerMask _excludeLayers;
 
         public static ColliderSnapshot From(Collider collider) {
             return new ColliderSnapshot() {
-                includeLayers = collider.includeLayers,
-                excludeLayers = collider.excludeLayers,
+                _includeLayers = collider.includeLayers,
+                _excludeLayers = collider.excludeLayers,
             };
         }
 
         public void ApplyTo(Collider collider) {
-            collider.includeLayers = includeLayers;
-            collider.excludeLayers = excludeLayers;
+            collider.includeLayers = _includeLayers;
+            collider.excludeLayers = _excludeLayers;
         }
     }
 }
